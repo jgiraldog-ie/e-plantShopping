@@ -10,6 +10,15 @@ body {
     background-color: #f0f0f0;
 }
 
+.cart-count {
+    position: absolute;
+    top: 5.2%;
+    right: 1.6%;
+    font-size: 1.5em; /* Tamaño de fuente relativo */
+    color: white; /* Color del texto */
+    transform: translate(-50%, -50%);
+}
+
 /* Navbar */
 .navbar {
     background-color: #4CAF50;
@@ -162,7 +171,8 @@ body {
 }
 .cart{
     color: white;
-    display: flex;
+    position: relative;
+    display: inline-block;
 }
 .cart_quantity_count{
     margin-top: 16px;

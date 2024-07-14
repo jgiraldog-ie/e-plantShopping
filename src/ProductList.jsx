@@ -1,7 +1,17 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState} from 'react';
 import './ProductList.css'
+import { useSelector, useDispatch } from "react-redux";
+import { addItem } from './CreatSlice';
+import Cart from './CartItem';
+
+
 function ProductList() {
   
+    const dispatch = useDispatch();
+    const [addedToCart,setAddedToCart] = useState([]);
+    const cartC = useSelector(state => state.cart.items);
+    const [showCart, setShowCart] = useState(false);
+
     const plantsArray = [
         {
             category: "Air Purifying Plants",
@@ -229,33 +239,76 @@ function ProductList() {
     fontSize: '30px',
     textDecoration: 'none',
    }
-    return (
+
+    const handleAddToCart = (plant) => {
+        dispatch(addItem(plant));
+        setAddedToCart((prevState) => ({...prevState,[plant.name]: true}));
+    };
+
+
+    const toggleCart = () => {
+        setShowCart(!showCart);
+        let added = cartC.filter(item => item.quantity > 0);
+        setAddedToCart([])
+        added.forEach((plant) => {
+            setAddedToCart((prevState) => ({...prevState,[plant.name]:true}))
+        })
+        
+        
+    };
+
+    const cartCount = () => { 
+        let totalCart = 0 ;
+        cartC.forEach(item => {
+            totalCart += item.quantity
+        });
+        return totalCart
+    }
+
+     return (
         <div>
-             <div className="navbar" style={styleObj}>
-            <div className="tag">
-               <div className="luxury">
-               <img src="https://cdn.pixabay.com/photo/2020/08/05/13/12/eco-5465432_1280.png" alt="" />
-               <a href="/" style={{textDecoration:'none'}}>
-                        <div>
-                    <h3 style={{color:'white'}}>Paradise Nursery</h3>
-                    <i style={{color:'white'}}>Where Green Meets Serenity</i>
+            <div className="navbar" style={styleObj}>
+                <div className="tag">
+                    <div className="luxury">
+                        <img src="https://cdn.pixabay.com/photo/2020/08/05/13/12/eco-5465432_1280.png" alt="" />
+                        <a href="/" style={{textDecoration:'none'}}>
+                            <div>
+                                <h3 style={{color:'white'}}>Paradise Nursery</h3>
+                                <i style={{color:'white'}}>Where Green Meets Serenity</i>
+                            </div>
+                        </a>
                     </div>
-                    </a>
                 </div>
-              
+                <div style={styleObjUl}>
+                    <div> <a href="#" style={styleA}>Plants</a></div>
+                    <div> <a href="#" style={styleA} onClick={toggleCart}><h1 className='cart'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="IconChangeColor" height="68" width="68"><rect width="156" height="156" fill="none"></rect><circle cx="80" cy="216" r="12"></circle><circle cx="184" cy="216" r="12"></circle><path d="M42.3,72H221.7l-26.4,92.4A15.9,15.9,0,0,1,179.9,176H84.1a15.9,15.9,0,0,1-15.4-11.6L32.5,37.8A8,8,0,0,0,24.8,32H8" fill="none" stroke="#faf9f9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" id="mainIconPathAttribute"></path></svg></h1></a></div>
+                    <span className="cart-count" onClick={toggleCart}>{cartCount()}</span>
+                </div>
             </div>
-            <div style={styleObjUl}>
-                <div> <a href="#" style={styleA}>Plants</a></div>
-                <div> <a href="#" style={styleA}><h1 className='cart'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="IconChangeColor" height="68" width="68"><rect width="156" height="156" fill="none"></rect><circle cx="80" cy="216" r="12"></circle><circle cx="184" cy="216" r="12"></circle><path d="M42.3,72H221.7l-26.4,92.4A15.9,15.9,0,0,1,179.9,176H84.1a15.9,15.9,0,0,1-15.4-11.6L32.5,37.8A8,8,0,0,0,24.8,32H8" fill="none" stroke="#faf9f9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" id="mainIconPathAttribute"></path></svg></h1></a></div>
-            </div>
+
+            {showCart ? (
+                <Cart onContinueShopping={toggleCart} /> // Mostramos el componente Cart
+            ) : (
+            <div className="product-grid">
+                {plantsArray.map((item,index) => (
+                    <div key={index}>
+                        <h1><div>{item.category}</div></h1>
+                        <div className='product-list'>  
+                            {item.plants.map((plant,plantIndex) => (
+                                <div className='product-card' key={plantIndex}>
+                                    <div className='product-title'>{plant.name}</div>
+                                    <img className='product-image' src={plant.image} alt={plant.name}/>
+                                    <div className='product-price'>{plant.cost}</div>
+                                    <div className='product-description'>{plant.description}</div>
+                                    <button className={`product-button ${addedToCart[plant.name] ? 'added-to-cart' : ''}`} onClick={() => handleAddToCart(plant) } disabled={addedToCart[plant.name]}>{addedToCart[plant.name] ? 'Added to Cart' : 'Add to Cart'}</button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>)}
+
         </div>
-
-        <div className="product-grid">
-
-
-        </div>
-
-    </div>
     );
 }
 
