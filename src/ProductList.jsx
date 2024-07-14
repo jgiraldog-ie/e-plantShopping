@@ -273,8 +273,8 @@ function ProductList() {
                         <img src="https://cdn.pixabay.com/photo/2020/08/05/13/12/eco-5465432_1280.png" alt="" />
                         <a href="/" style={{textDecoration:'none'}}>
                             <div>
-                                <h3 style={{color:'white'}}>Paradise Nursery</h3>
-                                <i style={{color:'white'}}>Where Green Meets Serenity</i>
+                                <h3 style={{color:'white'}}>Virtual Verde</h3>
+                                <i style={{color:'white'}}>Where Plants find a Home</i>
                             </div>
                         </a>
                     </div>
